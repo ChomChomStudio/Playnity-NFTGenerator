@@ -106,9 +106,35 @@ const layersSetup = (layersOrder) => {
       layerObj.options?.["bypassDNA"] !== undefined
         ? layerObj.options?.["bypassDNA"]
         : false,
+    itemsOptions: getItemsOptions(layerObj.options?.["itemsOptions"], layerObj.name)
+
   }));
   return layers;
 };
+
+const getItemsOptions = (itemsOptions, layerName) => {
+  if (itemsOptions === undefined || itemsOptions.length <= 0){
+    return []
+  }
+
+  const filteredOptions = itemsOptions.filter((option) => 
+    option.name !== undefined && option.name.trim() !== ""
+  )
+
+  if (filteredOptions.length === 0) {
+    return []
+  }
+
+  return filteredOptions.map((itemOptions) => ({
+    name: itemOptions.name,
+    blend: itemOptions.blend != undefined && itemOptions.blend.trim() !== ""
+      ? itemOptions.blend
+      : "source-over",
+    opacity: itemOptions.opacity != undefined
+      ? itemOptions.opacity
+      : 1,
+  }))
+}
 
 const saveImage = (_editionCount) => {
   fs.writeFileSync(
@@ -173,10 +199,27 @@ const addMetadata = (_dna, _edition) => {
 
 const addAttributes = (_element) => {
   let selectedElement = _element.layer.selectedElement;
-  attributesList.push({
-    trait_type: _element.layer.name,
-    value: selectedElement.name,
-  });
+
+  if (_element.layer.name.trim().toLowerCase() === "body") {
+    const selectedElementNameParts = selectedElement.name.split("with")
+    const bodyType = selectedElementNameParts[0].trim() 
+    const mouthType = selectedElementNameParts[1].trim() 
+
+    attributesList.push({
+      trait_type: _element.layer.name,
+      value: bodyType,
+    });
+
+    attributesList.push({
+      trait_type: "Mouth",
+      value: mouthType,
+    });
+  } else {
+    attributesList.push({
+      trait_type: _element.layer.name,
+      value: selectedElement.name,
+    });
+  }
 };
 
 const loadLayerImg = async (_layer) => {
@@ -199,8 +242,18 @@ const addText = (_sig, x, y, size) => {
 };
 
 const drawElement = (_renderObject, _index, _layersLen) => {
-  ctx.globalAlpha = _renderObject.layer.opacity;
-  ctx.globalCompositeOperation = _renderObject.layer.blend;
+  const optionsForSelectedElement = _renderObject.layer.itemsOptions.find(
+    (itemOptions) => itemOptions.name === _renderObject.layer.selectedElement.name
+  )
+
+  if (optionsForSelectedElement !== undefined) {
+    ctx.globalCompositeOperation = optionsForSelectedElement.blend
+    ctx.globalAlpha = optionsForSelectedElement.opacity
+  } else {
+    ctx.globalCompositeOperation = _renderObject.layer.blend;
+    ctx.globalAlpha = _renderObject.layer.opacity;
+  }
+
   text.only
     ? addText(
         `${_renderObject.layer.name}${text.spacer}${_renderObject.layer.selectedElement.name}`,
@@ -229,6 +282,7 @@ const constructLayerToDna = (_dna = "", _layers = []) => {
       blend: layer.blend,
       opacity: layer.opacity,
       selectedElement: selectedElement,
+      itemsOptions: layer.itemsOptions
     };
   });
   return mappedDnaToLayers;
@@ -281,6 +335,7 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
 
 const createDna = (_layers) => {
   let randNum = [];
+  let bodyName = ''; // this is custom for my needs
   _layers.forEach((layer) => {
     var totalWeight = 0;
     layer.elements.forEach((element) => {
@@ -292,16 +347,79 @@ const createDna = (_layers) => {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
+        let chosenElement = layer.elements[i]
+
+        if (layer.name.toLowerCase() === 'ears') { // this is custom for my needs
+          chosenElement = getCorrectEars(layer, bodyName, chosenElement)
+        }
+
+        if (layer.name.toLowerCase() === 'body') { // this is custom for my needs
+           bodyName = chosenElement.filename
+        }
+
         return randNum.push(
-          `${layer.elements[i].id}:${layer.elements[i].filename}${
+          `${chosenElement.id}:${chosenElement.filename}${
             layer.bypassDNA ? "?bypassDNA=true" : ""
           }`
         );
       }
     }
   });
+
   return randNum.join(DNA_DELIMITER);
 };
+
+const getCorrectEars = (layer, bodyName, currentEars) => { // this is custom for my needs
+  let earsNameParts = currentEars.filename.split('#')[0].split(' ')
+  let earsSize = earsNameParts[0]
+  let earsType = earsNameParts[1] ?? 'normal'
+
+  if (bodyName !== '') {
+    let bodyType = bodyName.split(' ')[0]
+
+    switch (bodyType.toLowerCase()) {
+      case 'tattos':
+      case 'normal':
+      case 'darker': {
+        const expectedType = 'normal'
+        if (earsType.toLowerCase() === expectedType) return currentEars;
+
+        return layer.elements.find((el) => {
+          return el.filename === `${earsSize}${rarityDelimiter}${currentEars.weight}.png` 
+        });
+      }
+      case 'golden': {
+        const expectedType = 'golden'
+        if (earsType.toLowerCase() === expectedType) return currentEars;
+
+        return layer.elements.find((el) => {
+          return el.filename === `${earsSize} ${expectedType}${rarityDelimiter}${currentEars.weight}.png` 
+        });
+      }
+      case 'rainbow': {
+        const expectedType = 'rainbow'
+        if (earsType.toLowerCase() === expectedType) return currentEars;
+
+        return layer.elements.find((el) => {
+          return el.filename === `${earsSize} ${expectedType}${rarityDelimiter}${currentEars.weight}.png` 
+        })
+      }
+      case 'shine': {
+        const expectedType = 'shine'
+        if (earsType.toLowerCase() === expectedType) return currentEars;
+
+        return layer.elements.find((el) => {
+          return el.filename === `${earsSize} ${expectedType}${rarityDelimiter}${currentEars.weight}.png` 
+        })
+      }
+      default: {
+        return currentEars
+      }
+    }
+  }
+
+  return currentEars
+}
 
 const writeMetaData = (_data) => {
   fs.writeFileSync(`${buildDir}/json/_metadata.json`, _data);

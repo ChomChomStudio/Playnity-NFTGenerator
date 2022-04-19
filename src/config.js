@@ -5,34 +5,55 @@ const { NETWORK } = require(`${basePath}/constants/network.js`);
 const network = NETWORK.eth;
 
 // General metadata for Ethereum
-const namePrefix = "Your Collection";
-const description = "Remember to replace this description";
+const namePrefix = "PlayNity Genesis";
+const description = "PlayNity Genesis Collection";
 const baseUri = "ipfs://NewUriToReplace";
 
 const solanaMetadata = {
-  symbol: "YC",
-  seller_fee_basis_points: 1000, // Define how much % you want from secondary market sales 1000 = 10%
-  external_url: "https://www.youtube.com/c/hashlipsnft",
+  symbol: "PNG",
+  seller_fee_basis_points: 350, // Define how much % you want from secondary market sales 1000 = 10%
+  external_url: "https://app.mintdao.io",
   creators: [
     {
-      address: "7fXNuer5sbZtaTEPhtJ5g5gNtuyRoKkvxdjEjEnPN4mC",
-      share: 100,
+      address: "",
+      share: 0,
     },
   ],
 };
 
 // If you have selected Solana then the collection starts from 0 automatically
+// You can now add extra options to each layer
+// you can specify blend mode and opacity for whole layer and display name, like so:
+// options: { blend: MODE.luminosity, opacity: 0.5, displayName: "my fav layer <3" }
+
+// but you can also specify blend mode and opacity for a specific element from the layer, like so:
+// options: { itemsOptions: [{ name: "Scars", blend: MODE.luminosity, opacity: 0.5 }] }
+// these options will only apply to the element called "Scars". You can specify different options 
+// for mulitple elements from the same layer
 const layerConfigurations = [
   {
     growEditionSizeTo: 5,
     layersOrder: [
       { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
+      { name: "Body" },
+      { name: "Hair" },
+      { name: "Ears" },
+      { name: "Clothes" },
+      { name: "Face Details",
+        options: {
+          itemsOptions: [{
+            name: 'Scars',
+            blend: MODE.luminosity,
+            opacity: 0.9
+          }]
+        } 
+      },
+      { name: "Eyebrows" },
+      { name: "Eyes" },
+      { name: "Jewelry" },
+      { name: "Headwear" },
+      { name: "Glasses" },
+      { name: "Head Features" }
     ],
   },
 ];
@@ -42,8 +63,8 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 512,
-  height: 512,
+  width: 6300,
+  height: 6300,
   smoothing: false,
 };
 

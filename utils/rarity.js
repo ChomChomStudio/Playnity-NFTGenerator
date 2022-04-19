@@ -42,15 +42,16 @@ layerConfigurations.forEach((config) => {
   });
 });
 
+
 // fill up rarity chart with occurrences from metadata
-data.forEach((element) => {
+data.forEach((element, index) => {
   let attributes = element.attributes;
   attributes.forEach((attribute) => {
     let traitType = attribute.trait_type;
     let value = attribute.value;
 
     let rarityDataTraits = rarityData[traitType];
-    rarityDataTraits.forEach((rarityDataTrait) => {
+    rarityDataTraits?.forEach((rarityDataTrait) => {
       if (rarityDataTrait.trait == value) {
         // keep track of occurrences
         rarityDataTrait.occurrence++;
