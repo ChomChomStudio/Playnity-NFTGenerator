@@ -378,7 +378,7 @@ const getCorrectEars = (layer, bodyName, currentEars) => { // this is custom for
     let bodyType = bodyName.split(' ')[0]
 
     switch (bodyType.toLowerCase()) {
-      case 'tattos':
+      case 'tattoos':
       case 'normal':
       case 'darker': {
         const expectedType = 'normal'

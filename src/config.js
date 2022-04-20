@@ -32,7 +32,7 @@ const solanaMetadata = {
 // for mulitple elements from the same layer
 const layerConfigurations = [
   {
-    growEditionSizeTo: 5,
+    growEditionSizeTo: 1800,
     layersOrder: [
       { name: "Background" },
       { name: "Body" },
@@ -63,15 +63,15 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 6300,
-  height: 6300,
+  width: 3150,
+  height: 3150,
   smoothing: false,
 };
 
 const gif = {
   export: false,
   repeat: 0,
-  quality: 100,
+  quality: 10,
   delay: 500,
 };
 
@@ -89,7 +89,7 @@ const text = {
 };
 
 const pixelFormat = {
-  ratio: 2 / 128,
+  ratio: 2 / 512,
 };
 
 const background = {
@@ -106,8 +106,8 @@ const rarityDelimiter = "#";
 const uniqueDnaTorrance = 10000;
 
 const preview = {
-  thumbPerRow: 5,
-  thumbWidth: 50,
+  thumbPerRow: 80,
+  thumbWidth: 200,
   imageRatio: format.height / format.width,
   imageName: "preview.png",
 };
