@@ -63,9 +63,9 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 3150,
-  height: 3150,
-  smoothing: false,
+  width: 1080,
+  height: 1080,
+  smoothing: true,
 };
 
 const gif = {
