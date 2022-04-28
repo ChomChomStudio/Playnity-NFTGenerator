@@ -36,6 +36,12 @@ const layerConfigurations = [
     layersOrder: [
       { name: "Background" },
       { name: "Body" },
+      { name: "Tattoos",
+        options: {
+          blend: MODE.softLight,
+          opacity: 1
+        }
+      },
       { name: "Hair" },
       { name: "Ears" },
       { name: "Clothes" },
