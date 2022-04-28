@@ -28,7 +28,8 @@ const solanaMetadata = {
 
 // but you can also specify blend mode and opacity for a specific element from the layer, like so:
 // options: { itemsOptions: [{ name: "Scars", blend: MODE.luminosity, opacity: 0.5 }] }
-// these options will only apply to the element called "Scars". You can specify different options 
+// these options will only apply to the element called "Scars". And because you're 
+// passing an array of itemsOptions, you can specify different options 
 // for mulitple elements from the same layer
 const layerConfigurations = [
   {
