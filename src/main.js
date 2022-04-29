@@ -164,8 +164,7 @@ const addMetadata = (_dna, _edition) => {
     edition: _edition,
     date: dateTime,
     ...extraMetadata,
-    attributes: attributesList,
-    compiler: "HashLips Art Engine",
+    attributes: attributesList
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -333,7 +332,7 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
   return !_DnaList.has(_filteredDNA);
 };
 
-const createDna = (_layers) => {
+const createDna = (_layers) => { // TODO: Tutaj musze wykryć czy aktualna warstwa to body, i jeśli tak to skip i wrócić do niego na końcu jak ju ustalę jakie body powinno mieć konkretne NFT
   let randNum = [];
   let bodyName = ''; // this is custom for my needs
   _layers.forEach((layer) => {
@@ -347,6 +346,7 @@ const createDna = (_layers) => {
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
+
         let chosenElement = layer.elements[i]
 
         if (layer.name.toLowerCase() === 'ears') { // this is custom for my needs

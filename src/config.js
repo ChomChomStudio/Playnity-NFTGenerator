@@ -33,7 +33,7 @@ const solanaMetadata = {
 // for mulitple elements from the same layer
 const layerConfigurations = [
   {
-    growEditionSizeTo: 1800,
+    growEditionSizeTo: 50,
     layersOrder: [
       { name: "Background" },
       { name: "Body" },

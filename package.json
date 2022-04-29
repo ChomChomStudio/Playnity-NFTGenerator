@@ -14,7 +14,8 @@
   "scripts": {
     "build": "node index.js",
     "generate": "node index.js",
-    "rarity": "node utils/rarity.js",
+    "rarity": "node -e 'require(\"./utils/rarity.js\").getRarityData(true)'",
+    "test": "node utils/test.js",
     "preview": "node utils/preview.js",
     "pixelate": "node utils/pixelate.js",
     "update_info": "node utils/update_info.js",
