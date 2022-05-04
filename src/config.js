@@ -33,7 +33,7 @@ const solanaMetadata = {
 // for mulitple elements from the same layer
 const layerConfigurations = [
   {
-    growEditionSizeTo: 50,
+    growEditionSizeTo: 1799,
     layersOrder: [
       { name: "Background" },
       { name: "Body" },
@@ -64,6 +64,20 @@ const layerConfigurations = [
     ],
   },
 ];
+
+// PlayNity specific config
+const numberOfItemsPerCategory = {
+  mythic: 20,
+  legendary: 60,
+  epic: 120,
+  rare: 500,
+  common: 1099
+  // mythic: 1,
+  // legendary: 2,
+  // epic: 3,
+  // rare: 4,
+  // common: 5
+}
 
 const shuffleLayerConfigurations = false;
 
@@ -100,7 +114,7 @@ const pixelFormat = {
 };
 
 const background = {
-  generate: true,
+  generate: false,
   brightness: "80%",
   static: false,
   default: "#000000",
@@ -147,4 +161,5 @@ module.exports = {
   solanaMetadata,
   gif,
   preview_gif,
+  numberOfItemsPerCategory
 };
